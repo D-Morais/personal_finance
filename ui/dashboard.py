@@ -1,49 +1,25 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
-
-
-# Dados mockados apenas para layout
-def load_mock_data():
-    return pd.DataFrame({
-        "Categoria": ["Alimentação", "Transporte", "Lazer", "Moradia"],
-        "Valor": [1200, 450, 300, 1800]
-    })
+from repositorio.repositorio_financeiro import fetch_all_transactions
+from core.finance_service import calculate_totals
+from core.statistics_service import to_dataframe, category_distribution
+import matplotlib.pyplot as plt
 
 
 def render_dashboard():
-    st.subheader("📊 Dashboard Financeiro")
+    st.title("📊 Dashboard Financeiro")
 
-    data = load_mock_data()
+    data = fetch_all_transactions()
+    income, expense, balance = calculate_totals(data)
 
-    total_despesas = data["Valor"].sum()
-    saldo = 5000 - total_despesas
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Receitas", f"R$ {income:.2f}")
+    c2.metric("Despesas", f"R$ {expense:.2f}")
+    c3.metric("Saldo", f"R$ {balance:.2f}")
 
-    # Cards principais
-    col1, col2, col3 = st.columns(3)
+    df = to_dataframe(data)
 
-    col1.metric("💼 Saldo Atual", f"R$ {saldo:,.2f}")
-    col2.metric("📉 Total de Despesas", f"R$ {total_despesas:,.2f}")
-    col3.metric("📈 Total de Receitas", "R$ 5.000,00")
+    dist = category_distribution(df)
 
-    st.markdown("---")
-
-    # Gráfico de gastos por categoria
-    fig_pizza = px.pie(
-        data,
-        values="Valor",
-        names="Categoria",
-        title="Distribuição de Gastos por Categoria"
-    )
-
-    st.plotly_chart(fig_pizza, use_container_width=True)
-
-    # Gráfico de barras
-    fig_bar = px.bar(
-        data,
-        x="Categoria",
-        y="Valor",
-        title="Gastos por Categoria"
-    )
-
-    st.plotly_chart(fig_bar, use_container_width=True)
+    fig, ax = plt.subplots()
+    dist.plot(kind="bar", ax=ax)
+    st.pyplot(fig)

@@ -1,28 +1,26 @@
 import streamlit as st
+from streamlit_option_menu import option_menu
 from ui.dashboard import render_dashboard
-from ui.new_transaction import render_new_transaction
-from ui.history import render_history
+from ui.nova_transacao import render_new_transaction
+from ui.historico import render_history
 
-st.set_page_config(
-    page_title="Personal Finance",
-    page_icon="💰",
-    layout="wide"
-)
+st.set_page_config(page_title="Personal Finance", page_icon="💳", layout="wide", initial_sidebar_state="auto")
 
-st.title("💰 Personal Finance")
-st.caption("Controle financeiro pessoal – execução local e offline")
+with st.sidebar:
+    pagina = option_menu(
+        menu_title="Personal Finance",
+        options=["Dashboard", "Nova Transação", "Histórico"],
+        icons=["clipboard-data", "plus-lg", "receipt"],
+        menu_icon="wallet2",
+        default_index=0,
+    )
 
-# Navegação simples (procedural)
-menu = st.sidebar.radio(
-    "Navegação",
-    ["Dashboard", "Nova Transação", "Histórico"]
-)
-
-if menu == "Dashboard":
+# --- Roteamento ---
+if pagina == "Dashboard":
     render_dashboard()
 
-elif menu == "Nova Transação":
+elif pagina == "Nova Transação":
     render_new_transaction()
 
-elif menu == "Histórico":
+elif pagina == "Histórico":
     render_history()
