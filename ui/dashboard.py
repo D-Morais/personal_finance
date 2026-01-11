@@ -1,6 +1,6 @@
 import streamlit as st
-from repositorio.repositorio_financeiro import fetch_all_transactions
-from core.finance_service import calculate_totals
+from repositorio.repositorio_financeiro import buscar_todas_transacoes
+from core.servico_financeiro import calcular_totais
 from core.statistics_service import to_dataframe, category_distribution
 import matplotlib.pyplot as plt
 
@@ -8,18 +8,21 @@ import matplotlib.pyplot as plt
 def render_dashboard():
     st.title("📊 Dashboard Financeiro")
 
-    data = fetch_all_transactions()
-    income, expense, balance = calculate_totals(data)
+    dados = buscar_todas_transacoes()
+    if not dados:
+        st.warning("Nenhum dado cadastrado encontrado.")
+        return
+    renda, despesa, saldo = calcular_totais(dados)
 
     c1, c2, c3 = st.columns(3)
-    c1.metric("Receitas", f"R$ {income:.2f}")
-    c2.metric("Despesas", f"R$ {expense:.2f}")
-    c3.metric("Saldo", f"R$ {balance:.2f}")
+    c1.metric("Receitas", f"R$ {renda:.2f}")
+    c2.metric("Despesas", f"R$ {despesa:.2f}")
+    c3.metric("Saldo", f"R$ {saldo:.2f}")
 
-    df = to_dataframe(data)
+    df = to_dataframe(dados)
 
     dist = category_distribution(df)
 
-    fig, ax = plt.subplots()
-    dist.plot(kind="bar", ax=ax)
-    st.pyplot(fig)
+ #   fig, ax = plt.subplots()
+ #   dist.plot(kind="bar", ax=ax)
+ #   st.pyplot(fig)

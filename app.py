@@ -1,8 +1,8 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 from ui.dashboard import render_dashboard
-from ui.nova_transacao import render_new_transaction
-from ui.historico import render_history
+from ui.nova_transacao import render_nova_transacao
+from ui.historico import render_historico
 
 st.set_page_config(page_title="Personal Finance", page_icon="💳", layout="wide", initial_sidebar_state="auto")
 
@@ -20,7 +20,7 @@ if pagina == "Dashboard":
     render_dashboard()
 
 elif pagina == "Nova Transação":
-    render_new_transaction()
+    render_nova_transacao()
 
 elif pagina == "Histórico":
-    render_history()
+    render_historico()

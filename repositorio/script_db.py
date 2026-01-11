@@ -2,10 +2,10 @@ import sqlite3
 
 
 def pegar_conexao():
-    return sqlite3.connect("db/finance.db")
+    return sqlite3.connect(r"db\finance.db")
 
 
-def iniciar_db():
+def iniciar_db() -> None:
     conexao = pegar_conexao()
     cursor = conexao.cursor()
     cursor.execute(

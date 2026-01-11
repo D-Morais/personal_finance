@@ -1,5 +1,5 @@
 import sqlite3 as sql
-from script_db import pegar_conexao
+from repositorio.script_db import pegar_conexao
 
 
 def adicionar_transacao(nova_descricao, novo_valor, categoria, transacao, data) -> bool:
